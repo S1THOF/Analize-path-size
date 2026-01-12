@@ -1,4 +1,4 @@
-module code
+module go-project-242
 
 go 1.25.4
 
