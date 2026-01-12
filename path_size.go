@@ -1,40 +1,39 @@
-package psize
+package code
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
-func GetSize(path string) {
+func GetPathSize(path string, recursive, human, all bool) (string, error) {
 	pathStat, err := os.Lstat(path)
-	var result int64
+	var sum int64
 	if err != nil {
-		log.Fatal("Wrong the path")
+		return "", err
 	}
 
 	if pathStat.IsDir() {
 		dir, err := os.ReadDir(path)
 		if err != nil {
-			log.Fatal("Error reading dir")
+			return "", err
 		}
 
-		fmt.Println("Path is dir", dir)
-
-		for _, file := range dir {
-			if !file.IsDir() {
-				fileInfo, err := os.DirEntry.Info(file)
-				if err != nil {
-					log.Fatal("Can't read file info")
-				}
-				if fileInfo.Mode().IsRegular() {
-					result += fileInfo.Size()
-				}
+		for _, entry := range dir {
+			if entry.IsDir() {
+				continue
+			}
+			fileInfo, err := entry.Info()
+			if err != nil {
+				return "", err
+			}
+			if fileInfo.Mode().IsRegular() {
+				sum += fileInfo.Size()
 			}
 		}
-	} else {
-		result += pathStat.Size()
-	}
 
-	fmt.Printf("%vB	%s", result, path)
+	} else {
+		sum += pathStat.Size()
+	}
+	result := fmt.Sprintf("%vB	%s", sum, path)
+	return result, nil
 }

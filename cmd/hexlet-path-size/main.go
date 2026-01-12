@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	ps "go-project-242"
+	ps "code"
 
 	"github.com/urfave/cli/v3"
 )
@@ -15,8 +15,11 @@ func main() {
 		Name:  "hexlet-path-size",
 		Usage: "print size of a file or directory",
 		Action: func(ctx context.Context, cmd *cli.Command) error {
-			// fmt.Println("Hello, Hexlet!")
-			ps.GetSize("./Makefile")
+			result, err := ps.GetPathSize(cmd.Args().Get(0), false, false, false)
+			if err != nil {
+				return err
+			}
+			fmt.Println(result)
 			return nil
 		},
 	}
