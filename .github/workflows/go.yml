@@ -24,8 +24,5 @@ jobs:
     - name: Build
       run: go build -o bin/hexlet-path-size ./cmd/hexlet-path-size
 
-    - name: Run
-      run: bin/hexlet-path-size
-
     - name: Test
       run: go test -v
