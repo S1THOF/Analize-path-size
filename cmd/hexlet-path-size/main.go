@@ -20,13 +20,18 @@ func main() {
 				Usage:   "human-readable sizes (auto-select unit)",
 				Aliases: []string{"H"},
 			},
+			&cli.BoolFlag{
+				Name:    "all",
+				Usage:   "include hidden files and directories",
+				Aliases: []string{"a"},
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			if cmd.NArg() == 0 {
 				return fmt.Errorf("path argument is required")
 			}
 			path := cmd.Args().First()
-			result, err := ps.GetPathSize(path, false, cmd.Bool("human"), false)
+			result, err := ps.GetPathSize(path, false, cmd.Bool("human"), cmd.Bool("all"))
 			if err != nil {
 				return err
 			}

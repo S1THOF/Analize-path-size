@@ -3,6 +3,7 @@ package code
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func GetPathSize(path string, recursive, human, all bool) (string, error) {
@@ -13,7 +14,7 @@ func GetPathSize(path string, recursive, human, all bool) (string, error) {
 		return "", err
 	}
 
-	if pathStat.IsDir() {
+	if (pathStat.IsDir() && all && strings.HasPrefix(pathStat.Name(), ".")) || (pathStat.IsDir() && !strings.HasPrefix(pathStat.Name(), ".")) {
 		dir, err := os.ReadDir(path)
 		if err != nil {
 			return "", err
@@ -27,12 +28,14 @@ func GetPathSize(path string, recursive, human, all bool) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			if fileInfo.Mode().IsRegular() {
+			if (fileInfo.Mode().IsRegular() && all && strings.HasPrefix(pathStat.Name(), ".")) || (fileInfo.Mode().IsRegular() && !strings.HasPrefix(pathStat.Name(), ".")) {
 				sum += fileInfo.Size()
 			}
 		}
 
-	} else {
+	}
+
+	if (pathStat.Mode().IsRegular() && all && strings.HasPrefix(pathStat.Name(), ".")) || (pathStat.Mode().IsRegular() && !strings.HasPrefix(pathStat.Name(), ".")) {
 		sum += pathStat.Size()
 	}
 
