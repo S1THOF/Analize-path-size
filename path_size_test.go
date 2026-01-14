@@ -21,7 +21,7 @@ func TestGetSize_file2(t *testing.T) {
 func TestGetSize_testdir(t *testing.T) {
 	res, err := GetPathSize("testdata/testdir", false, false, false)
 	assert.NoError(t, err)
-	assert.Equal(t, res, "124677B	testdata/testdir")
+	assert.Equal(t, res, "124805B	testdata/testdir")
 }
 
 func TestGetSize_file1_human(t *testing.T) {
@@ -39,36 +39,42 @@ func TestGetSize_file2_human(t *testing.T) {
 func TestGetSize_testdir_human(t *testing.T) {
 	res, err := GetPathSize("testdata/testdir", false, true, false)
 	assert.NoError(t, err)
-	assert.Equal(t, res, "121.8KB	testdata/testdir")
+	assert.Equal(t, res, "121.9KB	testdata/testdir")
 }
 
-func TestGetSize_silentfile_all_false(t *testing.T) {
-	res, err := GetPathSize("./testdata/.silentfile", false, false, false)
-	assert.NoError(t, err)
-	assert.Equal(t, res, "0B	./testdata/.silentfile")
+func TestGetSize_hiddenfile_all_false(t *testing.T) {
+	res, err := GetPathSize("./testdata/.hiddenfile", false, false, false)
+	assert.Error(t, err, "Error: open ./testdata/.hiddenfile: not a directory")
+	assert.Equal(t, res, "")
 }
 
-func TestGetSize_silentfile_all_true(t *testing.T) {
-	res, err := GetPathSize("./testdata/.silentfile", false, false, true)
+func TestGetSize_hiddenfile_all_true(t *testing.T) {
+	res, err := GetPathSize("./testdata/.hiddenfile", false, false, true)
 	assert.NoError(t, err)
-	assert.Equal(t, res, "62388B	./testdata/.silentfile")
+	assert.Equal(t, res, "62388B	./testdata/.hiddenfile")
 }
 
-func TestGetSize_silentdir_all_false(t *testing.T) {
-	res, err := GetPathSize("./testdata/.silentdir", false, false, false)
+func TestGetSize_hiddendir_all_false(t *testing.T) {
+	res, err := GetPathSize("./testdata/.hiddendir", false, false, false)
+	assert.Equal(t, res, "0B\t./testdata/.hiddendir")
 	assert.NoError(t, err)
-	assert.Equal(t, res, "0B	./testdata/.silentdir")
 }
 
-func TestGetSize_silentdir_all_true(t *testing.T) {
-	res, err := GetPathSize("./testdata/.silentdir", false, false, true)
+func TestGetSize_hiddendir_all_true(t *testing.T) {
+	res, err := GetPathSize("./testdata/.hiddendir", false, false, true)
 	assert.NoError(t, err)
-	assert.Equal(t, res, "62388B	./testdata/.silentdir")
+	assert.Equal(t, res, "62388B	./testdata/.hiddendir")
+}
+
+func TestGetSize_testdir_recursive_true(t *testing.T) {
+	res, err := GetPathSize("./testdata/testdir", true, true, true)
+	assert.NoError(t, err)
+	assert.Equal(t, res, "243.6KB	./testdata/testdir")
 }
 
 func TestFormat_b(t *testing.T) {
 	res := FormatSize(1000.0)
-	assert.Equal(t, res, "1000.0B")
+	assert.Equal(t, res, "1000B")
 }
 
 func TestFormat_KB(t *testing.T) {
