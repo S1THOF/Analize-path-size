@@ -7,11 +7,6 @@ A simple CLI tool to display the size of files and directories in bytes or human
 
 ## Installation
 
-```bash
-go install github.com/S1THOF/Analize-path-size/cmd/hexlet-path-size@latest
-```
-
-Or build from source:
 
 ```bash
 git clone https://github.com/S1THOF/Analize-path-size.git
